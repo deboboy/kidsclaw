@@ -120,6 +120,6 @@ Deploy to Vercel and configure:
 - **provision_events** — id (serial), instanceId, step, message (append-only log)
 
 ## TODOS
-- [ ] Test in Vercel preview environment
-- [ ] Setup Resend API
+- [X] Test in Vercel preview environment
+- [X] Setup Resend API
 - [ ] Setup Twilio API
