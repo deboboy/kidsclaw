@@ -46,5 +46,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => ({
       session.user.id = user.id;
       return session;
     },
+    redirect({ url, baseUrl }) {
+      // After sign-in, always go to dashboard
+      if (url === baseUrl || url.endsWith("/signin") || url.endsWith("/api/auth/signin")) {
+        return `${baseUrl}/dashboard`;
+      }
+      // Allow relative URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allow URLs on the same origin
+      if (url.startsWith(baseUrl)) return url;
+      return `${baseUrl}/dashboard`;
+    },
   },
 }));
