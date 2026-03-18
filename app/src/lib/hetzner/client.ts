@@ -24,7 +24,7 @@ export async function createServer(
     headers: headers(),
     body: JSON.stringify({
       name,
-      server_type: "cx22", // 2 vCPU, 4GB RAM
+      server_type: "cpx11", // 2 vCPU, 2GB RAM
       image: "ubuntu-24.04",
       location: "ash", // Ashburn, VA
       user_data: userData,
