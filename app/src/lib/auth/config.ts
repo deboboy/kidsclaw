@@ -12,6 +12,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => ({
   adapter: DrizzleAdapter(db()),
   providers: [
     Email({
+      server: {}, // Not used — we send via Resend in sendVerificationRequest
       from: process.env.EMAIL_FROM || "noreply@kidsclaw.club",
       sendVerificationRequest: async ({ identifier: email, url }) => {
         await getResend().emails.send({
