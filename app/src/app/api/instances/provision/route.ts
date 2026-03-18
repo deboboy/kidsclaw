@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth/config";
 import { db } from "@/lib/db";
 import { families, instances, provisionEvents } from "@/lib/db/schema";
+import { createServer } from "@/lib/hetzner/client";
+import { buildCloudInitScript } from "@/lib/hetzner/cloud-init";
+import { encrypt } from "@/lib/crypto";
+import { generateProvisionSecret } from "@/lib/tokens";
 import { eq } from "drizzle-orm";
 
 export async function POST() {
@@ -54,52 +58,78 @@ export async function POST() {
     })
     .returning();
 
-  // Run provisioning directly (skip Inngest for now)
-  // Fire-and-forget — don't await so the response returns immediately
-  runProvisioning(instance.id, family.id).catch((err) => {
-    console.error("Provisioning failed:", err);
+  // Generate provision secret for webhook auth
+  const provisionSecret = generateProvisionSecret();
+  const encryptedSecret = encrypt(provisionSecret);
+  const subdomain = family.id.split("-")[0];
+
+  // Determine the webhook URL (use AUTH_URL or VERCEL_URL)
+  const baseUrl =
+    process.env.AUTH_URL ||
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
+  const webhookUrl = `${baseUrl}/api/webhook/provision`;
+
+  // Build cloud-init script
+  const userData = buildCloudInitScript({
+    webhookUrl,
+    provisionSecret,
+    instanceId: instance.id,
+    subdomain,
   });
 
-  return NextResponse.json({ instance });
-}
+  try {
+    // Create Hetzner server with cloud-init
+    const serverName = `kidsclaw-${subdomain}`;
+    const server = await createServer(serverName, userData);
 
-async function runProvisioning(instanceId: string, familyId: string) {
-  const subdomain = familyId.split("-")[0];
-
-  // Simulate provisioning steps with delays
-  const steps = [
-    { step: "create_server", message: "Creating server...", status: "creating" as const },
-    { step: "system_setup", message: "Updating system packages...", status: "installing" as const },
-    { step: "install_node", message: "Installing Node.js 22...", status: "installing" as const },
-    { step: "install_openclaw", message: "Installing OpenClaw...", status: "installing" as const },
-    { step: "configure_openclaw", message: "Configuring OpenClaw for KidsClaw...", status: "configuring" as const },
-    { step: "deploy_games", message: "Setting up game library...", status: "configuring" as const },
-    { step: "firewall_caddy", message: "Configuring firewall and web server...", status: "configuring" as const },
-    { step: "ready", message: "KidsClaw is ready to play!", status: "ready" as const },
-  ];
-
-  for (const { step, message, status } of steps) {
-    // Insert provision event
-    await db().insert(provisionEvents).values({
-      instanceId,
-      step,
-      message,
-    });
-
-    // Update instance status
+    // Update instance with server info
     await db()
       .update(instances)
       .set({
-        status,
-        provisionStep: step,
+        hetznerServerId: String(server.id),
+        ipv4: server.public_net.ipv4.ip,
+        status: "creating",
+        provisionSecret: encryptedSecret,
         subdomain,
         updatedAt: new Date(),
       })
-      .where(eq(instances.id, instanceId));
+      .where(eq(instances.id, instance.id));
 
-    // Simulate time for each step (skip delay on final step)
-    if (step !== "ready") {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-    }
+    // Log the first provision event
+    await db().insert(provisionEvents).values({
+      instanceId: instance.id,
+      step: "create_server",
+      message: `Server created (IP: ${server.public_net.ipv4.ip})`,
+    });
+
+    return NextResponse.json({
+      instance: {
+        ...instance,
+        hetznerServerId: String(server.id),
+        ipv4: server.public_net.ipv4.ip,
+        status: "creating",
+        subdomain,
+      },
+    });
+  } catch (err) {
+    // Mark instance as error
+    const errorMessage =
+      err instanceof Error ? err.message : "Unknown provisioning error";
+    await db()
+      .update(instances)
+      .set({
+        status: "error",
+        provisionError: errorMessage,
+        updatedAt: new Date(),
+      })
+      .where(eq(instances.id, instance.id));
+
+    console.error("Hetzner provisioning failed:", errorMessage);
+    return NextResponse.json(
+      { error: "Failed to create server", details: errorMessage },
+      { status: 500 }
+    );
   }
 }

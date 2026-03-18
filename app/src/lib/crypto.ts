@@ -5,11 +5,19 @@ const IV_LENGTH = 12;
 const TAG_LENGTH = 16;
 
 function getKey(): Buffer {
-  const hex = process.env.ENCRYPTION_KEY;
-  if (!hex || hex.length !== 64) {
-    throw new Error("ENCRYPTION_KEY must be 64 hex characters (32 bytes)");
+  const key = process.env.ENCRYPTION_KEY;
+  if (!key) {
+    throw new Error("ENCRYPTION_KEY environment variable is not set");
   }
-  return Buffer.from(hex, "hex");
+  // Support both hex (64 chars) and base64 formats
+  if (/^[0-9a-fA-F]{64}$/.test(key)) {
+    return Buffer.from(key, "hex");
+  }
+  const buf = Buffer.from(key, "base64");
+  if (buf.length !== 32) {
+    throw new Error("ENCRYPTION_KEY must decode to exactly 32 bytes");
+  }
+  return buf;
 }
 
 export function encrypt(plaintext: string): string {
