@@ -3,7 +3,6 @@ import { auth } from "@/lib/auth/config";
 import { db } from "@/lib/db";
 import { families, instances } from "@/lib/db/schema";
 import { deleteServer } from "@/lib/hetzner/client";
-import { inngest } from "@/lib/provisioning/inngest";
 import { eq } from "drizzle-orm";
 
 export async function POST() {
@@ -50,13 +49,7 @@ export async function POST() {
     })
     .returning();
 
-  await inngest.send({
-    name: "instance/provision.requested",
-    data: {
-      instanceId: instance.id,
-      familyId: family.id,
-    },
-  });
-
+  // Trigger provisioning via the provision endpoint's logic
+  // For now, just return — the user can click Launch again from dashboard
   return NextResponse.json({ instance });
 }
