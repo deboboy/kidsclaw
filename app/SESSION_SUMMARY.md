@@ -1,29 +1,28 @@
 # Session Summary — KidsClaw Onboarding Implementation
 
-**Date:** 2026-03-17
+## Session 1 — 2026-03-17
 
-## What was built
+### What was built
 
 Implemented the full KidsClaw onboarding experience from a greenfield Next.js project, covering all four phases of the implementation plan.
 
-### Phase 1: Foundation
+#### Phase 1: Foundation
 - Scaffolded Next.js 15 app with TypeScript + Tailwind CSS
 - Drizzle ORM schema with 8 tables (4 NextAuth + 4 KidsClaw)
 - NextAuth v5 with magic link email via Resend
 - Landing page with hero, how-it-works, and game preview sections
 - Sign-in page with email input and magic link confirmation UI
 
-### Phase 2: Provisioning
+#### Phase 2: Provisioning
 - Hetzner Cloud API client (create, delete, get servers)
 - Cloud-init script builder — 7-step VPS setup that reports progress via webhook
-- Inngest durable provisioning workflow with timeout handling and cleanup
 - Provision webhook endpoint — authenticated with encrypted one-time secrets
 - SSE progress stream for real-time provisioning updates
 - Provisioning progress UI — 7-step stepper with animated progress bars and space facts
 - AES-256-GCM encryption for gateway tokens and provision secrets
 - Retry flow — destroy failed VPS and start fresh
 
-### Phase 3: Kids
+#### Phase 3: Kids
 - Full kid CRUD API (add, update, deactivate, regenerate tokens)
 - 22-char nanoid tokens (~131 bits entropy) for unguessable play URLs
 - Add-kid modal with QR code generation (qrcode.react)
@@ -33,82 +32,53 @@ Implemented the full KidsClaw onboarding experience from a greenfield Next.js pr
 - Game selector carousel with 7 space/science/math games
 - WebChat component connecting to family's OpenClaw instance
 
-### Phase 4: Security & Polish
+#### Phase 4: Security & Polish
 - CSP headers on kid-facing `/play/*` pages
 - Rate limiting headers on `/api/*` routes
 - Token revocation — parents can deactivate and regenerate
 - Settings page with danger zone (server destruction)
 - Middleware for security headers
 
-## Files created (40 source files)
+### Deployment & debugging
 
-### Pages (7)
-- `src/app/page.tsx` — Landing page
-- `src/app/(auth)/signin/page.tsx` — Sign-in
-- `src/app/(parent)/dashboard/page.tsx` — Parent dashboard
-- `src/app/(parent)/dashboard/provisioning/page.tsx` — Provisioning progress
-- `src/app/(parent)/settings/page.tsx` — Settings
-- `src/app/play/[token]/page.tsx` — Kid play (server component)
-- `src/app/play/[token]/play-client.tsx` — Kid play (client component)
+Deployed to Vercel connected to GitHub repo `deboboy/kidsclaw`. Fixed several issues during deployment:
 
-### API Routes (12)
-- `src/app/api/auth/[...nextauth]/route.ts`
-- `src/app/api/inngest/route.ts`
-- `src/app/api/instances/provision/route.ts`
-- `src/app/api/instances/status/route.ts`
-- `src/app/api/instances/progress/route.ts`
-- `src/app/api/instances/retry/route.ts`
-- `src/app/api/instances/route.ts`
-- `src/app/api/kids/route.ts`
-- `src/app/api/kids/[id]/route.ts`
-- `src/app/api/kids/[id]/regenerate-token/route.ts`
-- `src/app/api/kids/[id]/send-link/route.ts`
-- `src/app/api/webhook/provision/route.ts`
+1. **Missing DB tables** — ran `npx drizzle-kit push` to create schema in Neon
+2. **NextAuth Email provider** — needed `server: {}` even when using custom Resend sender
+3. **Vercel root directory** — set to `app` in project settings (Next.js app lives in `app/` subdirectory)
+4. **Framework preset** — had to be set to "Next.js" in Vercel settings
+5. **nodemailer peer dep** — pinned to v7 to resolve conflict with next-auth
+6. **NextAuth table names** — adapter expects singular names (`user`, `account`, `session`, `verificationToken`)
+7. **NextAuth column names** — adapter expects camelCase DB columns (`emailVerified`, `userId`, `sessionToken`, `providerAccountId`)
+8. **Post-login redirect** — added redirect callback to send users to `/dashboard` after magic link verification
+9. **Inngest not configured** — replaced with direct simulated provisioning (no real VPS yet)
+10. **Git repo structure** — fixed nested `.git` from create-next-app; force-pushed clean repo
 
-### Components (6)
-- `src/components/parent/instance-card.tsx`
-- `src/components/parent/kid-list.tsx`
-- `src/components/parent/add-kid-modal.tsx`
-- `src/components/parent/provisioning-progress.tsx`
-- `src/components/parent/qr-code.tsx`
-- `src/components/kid/game-selector.tsx`
-- `src/components/kid/chat-bubble.tsx`
-- `src/components/kid/webchat.tsx`
+### End-of-session status
 
-### Library (9)
-- `src/lib/db/schema.ts` — Drizzle schema
-- `src/lib/db/index.ts` — Lazy DB connection
-- `src/lib/auth/config.ts` — NextAuth config
-- `src/lib/hetzner/client.ts` — Hetzner API
-- `src/lib/hetzner/cloud-init.ts` — Cloud-init builder
-- `src/lib/provisioning/inngest.ts` — Inngest client
-- `src/lib/provisioning/steps.ts` — Provisioning workflow
-- `src/lib/crypto.ts` — AES-256-GCM encryption
-- `src/lib/tokens.ts` — Token generation + play URLs
+**Working end-to-end flow verified on production (Vercel):**
+- Parent signs up with email → receives magic link → clicks → lands on dashboard
+- Clicks "Launch KidsClaw" → simulated provisioning completes → dashboard shows "Ready"
+- Clicks "Add Kid" → enters name → QR code generated
+- Kid scans QR on iPhone → sees game selector page
 
-### Config
-- `src/middleware.ts` — CSP + rate limiting
-- `src/app/(parent)/layout.tsx` — SessionProvider wrapper
-- `drizzle.config.ts` — Drizzle Kit config
-- `.env.example` — All required environment variables
+**Provisioning is simulated** — steps through DB updates with 2s delays but does NOT call Hetzner API. Real VPS provisioning to be wired up later.
 
-## Build status
+### Key technical decisions
 
-**Passes clean.** `npm run build` compiles with zero errors. All 18 routes registered. Lazy DB initialization avoids build-time connection errors.
+1. **Lazy DB connection** — `db()` is a function to avoid Neon connection errors at build time
+2. **NextAuth lazy config** — wrapped in `NextAuth(() => ({...}))` callback
+3. **nanoid v3** — pinned for CommonJS compatibility with Next.js
+4. **Simulated provisioning** — skipped Inngest, runs directly in API route for now
 
-## Key technical decisions
+### What's next
 
-1. **Lazy DB connection** — `db()` is a function, not a value, to avoid Neon connection errors at build time when `DATABASE_URL` isn't set
-2. **NextAuth lazy config** — Auth config wrapped in a callback `NextAuth(() => ({...}))` for the same reason
-3. **Inngest v4 API** — Uses `triggers` array inside options object (not separate arg)
-4. **nanoid v3** — Pinned to v3 for CommonJS compatibility with Next.js
-
-## What's needed to go live
-
-1. Set up Vercel Postgres (Neon) and run `npx drizzle-kit push`
-2. Configure all env vars (Resend, Hetzner, Inngest, encryption key)
-3. Deploy to Vercel
-4. Set up wildcard DNS `*.play.kidsclaw.club`
-5. Connect Inngest via Vercel integration
-6. Optional: Configure Twilio for SMS
-7. Optional: Set up Upstash Redis for proper rate limiting
+- [ ] Wire up real Hetzner VPS provisioning
+- [ ] Connect provisioning to actual OpenClaw installation
+- [ ] Set up Inngest for durable provisioning workflow (retries, timeouts)
+- [ ] WebChat: connect to real OpenClaw instance on VPS
+- [ ] Set up wildcard DNS `*.play.kidsclaw.club`
+- [ ] Configure Twilio for SMS play links
+- [ ] Set up Upstash Redis for rate limiting
+- [ ] Nintendo-style branding polish, confetti animation
+- [ ] Mobile responsiveness testing on kid play pages
