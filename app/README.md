@@ -118,3 +118,8 @@ Deploy to Vercel and configure:
 - **instances** — id, familyId, hetznerServerId, ipv4, status, provisionStep, provisionError, gatewayToken (encrypted), provisionSecret (encrypted), subdomain
 - **kids** — id, familyId, name, token (22-char nanoid), phone, avatarSeed, active
 - **provision_events** — id (serial), instanceId, step, message (append-only log)
+
+## TODOS
+- [ ] Test in Vercel preview environment
+- [ ] Setup Resend API
+- [ ] Setup Twilio API
