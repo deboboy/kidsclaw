@@ -115,6 +115,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-gray-100 py-8 text-center text-sm text-gray-500">
         <p>KidsClaw &mdash; Safe, fun, educational AI games for kids.</p>
+        <p>Copyright © 2026 Last Myle LLC. All rights reserved.</p>
       </footer>
     </div>
   );
