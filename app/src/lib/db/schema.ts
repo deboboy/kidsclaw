@@ -19,8 +19,8 @@ export const instanceStatusEnum = pgEnum("instance_status", [
   "destroyed",
 ]);
 
-// NextAuth tables
-export const users = pgTable("users", {
+// NextAuth tables — names must match @auth/drizzle-adapter defaults
+export const users = pgTable("user", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name"),
   email: text("email").notNull().unique(),
@@ -30,7 +30,7 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const accounts = pgTable("accounts", {
+export const accounts = pgTable("account", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: uuid("user_id")
     .notNull()
@@ -47,7 +47,7 @@ export const accounts = pgTable("accounts", {
   session_state: text("session_state"),
 });
 
-export const sessions = pgTable("sessions", {
+export const sessions = pgTable("session", {
   id: uuid("id").defaultRandom().primaryKey(),
   sessionToken: text("session_token").notNull().unique(),
   userId: uuid("user_id")
@@ -56,7 +56,7 @@ export const sessions = pgTable("sessions", {
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
-export const verificationTokens = pgTable("verification_tokens", {
+export const verificationTokens = pgTable("verificationToken", {
   identifier: text("identifier").notNull(),
   token: text("token").notNull().unique(),
   expires: timestamp("expires", { mode: "date" }).notNull(),
