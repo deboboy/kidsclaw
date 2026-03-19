@@ -12,7 +12,7 @@ export function ChatBubble({ message, isUser }: ChatBubbleProps) {
       <div
         className={`max-w-[80%] rounded-2xl px-4 py-3 ${
           isUser
-            ? "bg-violet-500 text-white rounded-br-sm"
+            ? "bg-[#e60012] text-white rounded-br-sm"
             : "bg-white/90 text-gray-800 rounded-bl-sm shadow-sm"
         }`}
       >

@@ -103,19 +103,19 @@ export function WebChat({
   return (
     <div className="flex flex-col h-full w-full max-w-full overflow-hidden">
       {/* Chat header */}
-      <div className="bg-white/10 backdrop-blur-sm px-4 py-3 flex items-center gap-3 flex-shrink-0 pt-[max(0.75rem,env(safe-area-inset-top))]">
+      <div className="bg-[#e60012] px-4 py-3 flex items-center gap-3 flex-shrink-0 pt-[max(0.75rem,env(safe-area-inset-top))]">
         {onBack && (
           <button
             onClick={onBack}
-            className="text-white/70 hover:text-white text-sm font-medium flex-shrink-0 pr-1"
+            className="text-white/80 hover:text-white text-sm font-bold flex-shrink-0 pr-1"
           >
             ← Games
           </button>
         )}
         <div className="text-2xl flex-shrink-0">{gameIcon}</div>
         <div className="min-w-0 flex-1">
-          <p className="text-white font-bold text-sm truncate">{gameName}</p>
-          <p className="text-white/60 text-xs truncate">Playing as {kidName}</p>
+          <p className="text-white font-extrabold text-sm truncate">{gameName}</p>
+          <p className="text-white/70 text-xs truncate">Playing as {kidName}</p>
         </div>
       </div>
 
@@ -153,12 +153,12 @@ export function WebChat({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your answer..."
-            className="flex-1 min-w-0 px-4 py-3 rounded-xl bg-white/90 text-gray-800 placeholder-gray-400 text-base focus:outline-none focus:ring-2 focus:ring-violet-400"
+            className="flex-1 min-w-0 px-4 py-3 rounded-xl bg-white/90 text-gray-800 placeholder-gray-400 text-base focus:outline-none focus:ring-2 focus:ring-[#e60012]"
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="px-4 py-3 rounded-xl bg-violet-500 text-white font-bold text-sm hover:bg-violet-600 disabled:opacity-50 transition-colors flex-shrink-0"
+            className="px-4 py-3 rounded-xl bg-[#e60012] text-white font-bold text-sm hover:bg-[#c7000f] disabled:opacity-50 transition-colors flex-shrink-0"
           >
             Send
           </button>

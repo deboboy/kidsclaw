@@ -36,7 +36,7 @@ export default async function PlayPage({
 
   if (!kid) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#1a0a2e] to-[#2d1b4e] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[#2d2d2d] flex items-center justify-center px-4">
         <div className="text-center">
           <div className="text-6xl mb-4">🔗</div>
           <h1 className="text-2xl font-bold text-white mb-2">
@@ -58,7 +58,7 @@ export default async function PlayPage({
 
   if (!instance || instance.status !== "ready") {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#1a0a2e] to-[#2d1b4e] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[#2d2d2d] flex items-center justify-center px-4">
         <div className="text-center">
           <div className="text-6xl mb-4">😴</div>
           <h1 className="text-2xl font-bold text-white mb-2">
