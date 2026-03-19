@@ -42,7 +42,9 @@ export default function DashboardPage() {
     ]);
     const instData = await instRes.json();
     const kidsData = await kidsRes.json();
-    setInstance(instData.instance);
+    // Treat "destroyed" as no instance — show Launch button
+    const inst = instData.instance;
+    setInstance(inst?.status === "destroyed" ? null : inst);
     setKids(kidsData.kids || []);
     setLoading(false);
   }, []);
