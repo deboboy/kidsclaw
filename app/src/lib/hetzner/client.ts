@@ -26,7 +26,7 @@ export async function createServer(
       name,
       server_type: "cax21", // 4 vCPU, 8GB RAM (ARM)
       image: "ubuntu-24.04",
-      location: "ash", // Ashburn, VA
+      location: "hel1", // Helsinki (required for ARM/cax servers)
       user_data: userData,
       start_after_create: true,
       labels: { app: "kidsclaw" },
