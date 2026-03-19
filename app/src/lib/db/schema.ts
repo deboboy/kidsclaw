@@ -115,3 +115,12 @@ export const provisionEvents = pgTable("provision_events", {
   message: text("message").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const feedback = pgTable("feedback", {
+  id: serial("id").primaryKey(),
+  role: text("role").notNull(), // "parent" or "kid"
+  rating: integer("rating"),
+  message: text("message").notNull(),
+  email: text("email"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});

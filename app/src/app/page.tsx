@@ -265,6 +265,9 @@ export default function LandingPage() {
             Safe, fun, educational AI games for kids.
           </p>
           <div className="flex justify-center gap-4 mt-3">
+            <Link href="/feedback" className="text-white/40 text-xs hover:text-white/60">
+              Give Feedback
+            </Link>
             <Link href="/terms" className="text-white/40 text-xs hover:text-white/60">
               Terms of Service
             </Link>
