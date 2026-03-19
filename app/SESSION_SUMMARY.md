@@ -64,21 +64,69 @@ Deployed to Vercel connected to GitHub repo `deboboy/kidsclaw`. Fixed several is
 
 **Provisioning is simulated** — steps through DB updates with 2s delays but does NOT call Hetzner API. Real VPS provisioning to be wired up later.
 
+---
+
+## Session 2 — 2026-03-18
+
+### What was built
+
+#### Real Hetzner VPS provisioning
+- Replaced simulated provisioning with real Hetzner API calls
+- Provision route creates a cpx11 server (2 vCPU, 2GB RAM, Ashburn VA) with cloud-init baked in
+- Cloud-init script installs Node.js 22, OpenClaw, Caddy, configures firewall
+- Each step reports progress back to `/api/webhook/provision` with 3-attempt retry logic
+- Cloud-init logs to `/var/log/kidsclaw-provision.log` on VPS for debugging
+- Caddy installed via official apt repo
+- Fixed: cx22 server type deprecated → switched to cpx11
+- Fixed: ENCRYPTION_KEY format — crypto module now accepts both hex and base64
+
+#### Chat API with built-in game responses
+- Created `/api/chat` proxy endpoint that validates kid tokens
+- Tries to proxy to the VPS OpenClaw instance first
+- Falls back to built-in interactive game responses when VPS isn't ready
+- Implemented real game logic for Mars Mission (math problems with answer checking), Science Lab (experiment Q&A), Space Trivia (multi-choice with progression), and generic responses for other games
+- WebChat now routes through our API instead of directly to VPS subdomain
+
+#### Mobile responsiveness fixes
+- `h-dvh` instead of `h-screen` (respects mobile browser chrome)
+- `min-w-0` and `flex-shrink-0` to prevent content overflow
+- iOS safe-area-inset-bottom padding for input bar
+- iOS safe-area-inset-top padding for header (notch)
+- Viewport meta with `viewport-fit: cover`
+- Fixed overlapping header: moved "← Games" back button into the header bar (was absolute positioned on top of it)
+
+#### Dashboard UX improvements
+- Added "Show QR" toggle button on each kid card — reveals QR code inline
+- Parents can scan from their phone without copy/pasting links
+
+### Deployment fixes
+1. **ENCRYPTION_KEY format** — was 64 bytes (base64 of 64 random bytes) instead of 32. Generated proper 32-byte key
+2. **Deprecated server type** — Hetzner cx22 → cpx11
+3. **Stale instances** — cleaned up stuck "pending" instances from failed attempts multiple times
+
+### End-of-session status
+
+**Full end-to-end flow working on production (Vercel + real Hetzner VPS):**
+- Parent signs up → magic link → dashboard
+- Clicks "Launch KidsClaw" → **real Hetzner VPS created** → cloud-init runs → progress reported via webhook → dashboard shows "Ready"
+- Adds kid → shows QR code inline on dashboard
+- Kid scans QR on iPhone → game selector → picks Mars Mission → **interactive math game works with answer checking**
+- Mobile layout fits properly on iPhone
+
 ### Key technical decisions
 
-1. **Lazy DB connection** — `db()` is a function to avoid Neon connection errors at build time
-2. **NextAuth lazy config** — wrapped in `NextAuth(() => ({...}))` callback
-3. **nanoid v3** — pinned for CommonJS compatibility with Next.js
-4. **Simulated provisioning** — skipped Inngest, runs directly in API route for now
+1. **Chat proxy with fallback** — `/api/chat` tries VPS first, falls back to built-in game logic. This means games work even before OpenClaw is fully configured on VPS
+2. **cpx11 server type** — cheapest current Hetzner option ($4.49/mo), sufficient for OpenClaw
+3. **No Inngest yet** — provisioning runs as a single Hetzner API call + fire-and-forget cloud-init. Works for MVP but no timeout/retry orchestration
 
 ### What's next
 
-- [ ] Wire up real Hetzner VPS provisioning
-- [ ] Connect provisioning to actual OpenClaw installation
-- [ ] Set up Inngest for durable provisioning workflow (retries, timeouts)
-- [ ] WebChat: connect to real OpenClaw instance on VPS
-- [ ] Set up wildcard DNS `*.play.kidsclaw.club`
+- [ ] Connect chat to real OpenClaw instance on VPS (once cloud-init completes successfully)
+- [ ] Set up wildcard DNS `*.play.kidsclaw.club` for per-family subdomains
+- [ ] Set up Inngest for durable provisioning (retries, timeouts, cleanup on failure)
+- [ ] VPS health checks — detect and handle down/unreachable servers
 - [ ] Configure Twilio for SMS play links
-- [ ] Set up Upstash Redis for rate limiting
-- [ ] Nintendo-style branding polish, confetti animation
-- [ ] Mobile responsiveness testing on kid play pages
+- [ ] Nintendo-style branding polish, confetti animation on provisioning complete
+- [ ] More game content — expand built-in responses for all 7 games
+- [ ] Set up Upstash Redis for API rate limiting
+- [ ] Server teardown — clean up Hetzner VPS when parent destroys instance
