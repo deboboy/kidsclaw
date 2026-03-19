@@ -75,6 +75,7 @@ export default async function PlayPage({
   return (
     <PlayClient
       kidName={kid.name}
+      kidToken={token}
       subdomain={instance.subdomain || ""}
       games={GAMES}
     />

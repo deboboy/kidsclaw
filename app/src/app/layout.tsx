@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   title: "KidsClaw - Educational Games for Kids",
   description:
     "Fun, safe, educational AI-powered games for kids aged 9-11. Science, math, and space exploration!",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    viewportFit: "cover",
+  },
 };
 
 export default function RootLayout({

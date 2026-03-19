@@ -14,16 +14,17 @@ interface Game {
 
 interface PlayClientProps {
   kidName: string;
+  kidToken: string;
   subdomain: string;
   games: Game[];
 }
 
-export function PlayClient({ kidName, subdomain, games }: PlayClientProps) {
+export function PlayClient({ kidName, kidToken, subdomain, games }: PlayClientProps) {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
   if (selectedGame) {
     return (
-      <div className="h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-violet-900 flex flex-col">
+      <div className="h-dvh bg-gradient-to-b from-indigo-900 via-purple-900 to-violet-900 flex flex-col overflow-hidden">
         {/* Back button */}
         <button
           onClick={() => setSelectedGame(null)}
@@ -34,16 +35,16 @@ export function PlayClient({ kidName, subdomain, games }: PlayClientProps) {
 
         <WebChat
           kidName={kidName}
+          kidToken={kidToken}
           gameName={selectedGame.name}
           gameIcon={selectedGame.icon}
-          instanceSubdomain={subdomain}
         />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-violet-900 flex flex-col items-center justify-center px-4 py-8">
+    <div className="min-h-dvh bg-gradient-to-b from-indigo-900 via-purple-900 to-violet-900 flex flex-col items-center justify-center px-4 py-8">
       {/* Welcome */}
       <div className="text-center mb-8">
         <div className="text-6xl mb-4">🎮</div>

@@ -11,16 +11,16 @@ interface Message {
 
 interface WebChatProps {
   kidName: string;
+  kidToken: string;
   gameName: string;
   gameIcon: string;
-  instanceSubdomain: string;
 }
 
 export function WebChat({
   kidName,
+  kidToken,
   gameName,
   gameIcon,
-  instanceSubdomain,
 }: WebChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -52,18 +52,15 @@ export function WebChat({
     setSending(true);
 
     try {
-      // Connect to the family's OpenClaw instance
-      const res = await fetch(
-        `https://${instanceSubdomain}.play.kidsclaw.club/api/chat`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: userMessage.content,
-            game: gameName,
-          }),
-        }
-      );
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: kidToken,
+          message: userMessage.content,
+          game: gameName,
+        }),
+      });
 
       if (res.ok) {
         const data = await res.json();
@@ -102,18 +99,18 @@ export function WebChat({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full max-w-full overflow-hidden">
       {/* Chat header */}
-      <div className="bg-white/10 backdrop-blur-sm px-4 py-3 flex items-center gap-3">
+      <div className="bg-white/10 backdrop-blur-sm px-4 py-3 flex items-center gap-3 flex-shrink-0">
         <div className="text-2xl">{gameIcon}</div>
-        <div>
-          <p className="text-white font-bold text-sm">{gameName}</p>
-          <p className="text-white/60 text-xs">Playing as {kidName}</p>
+        <div className="min-w-0">
+          <p className="text-white font-bold text-sm truncate">{gameName}</p>
+          <p className="text-white/60 text-xs truncate">Playing as {kidName}</p>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto px-3 py-4 min-h-0">
         {messages.map((msg) => (
           <ChatBubble
             key={msg.id}
@@ -136,19 +133,22 @@ export function WebChat({
       </div>
 
       {/* Input */}
-      <form onSubmit={sendMessage} className="p-4 bg-white/5 backdrop-blur-sm">
-        <div className="flex gap-2">
+      <form
+        onSubmit={sendMessage}
+        className="p-3 bg-white/5 backdrop-blur-sm flex-shrink-0 safe-bottom"
+      >
+        <div className="flex gap-2 w-full">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your answer..."
-            className="flex-1 px-4 py-3 rounded-xl bg-white/90 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400"
+            className="flex-1 min-w-0 px-4 py-3 rounded-xl bg-white/90 text-gray-800 placeholder-gray-400 text-base focus:outline-none focus:ring-2 focus:ring-violet-400"
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="px-5 py-3 rounded-xl bg-violet-500 text-white font-bold text-sm hover:bg-violet-600 disabled:opacity-50 transition-colors"
+            className="px-4 py-3 rounded-xl bg-violet-500 text-white font-bold text-sm hover:bg-violet-600 disabled:opacity-50 transition-colors flex-shrink-0"
           >
             Send
           </button>
