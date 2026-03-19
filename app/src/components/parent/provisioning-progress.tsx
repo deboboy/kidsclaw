@@ -37,7 +37,6 @@ export function ProvisioningProgress() {
       if (data.type === "progress") {
         setEvents((prev) => [...prev, data]);
         setCurrentStep(data.step);
-        // Advance fact
         const stepIdx = STEPS.findIndex((s) => s.key === data.step);
         if (stepIdx >= 0) setFactIndex(stepIdx);
       } else if (data.type === "complete") {
@@ -71,22 +70,21 @@ export function ProvisioningProgress() {
     <div className="max-w-lg mx-auto">
       {/* Space fact */}
       {status === "provisioning" && STEPS[factIndex]?.fact && (
-        <div className="bg-violet-50 rounded-xl p-4 mb-8 text-center">
-          <p className="text-sm text-violet-700 font-medium">
+        <div className="bg-red-50 border border-red-100 rounded-2xl p-4 mb-8 text-center">
+          <p className="text-sm text-[#e60012] font-bold">
             Did you know?
           </p>
-          <p className="text-sm text-violet-600 mt-1">
+          <p className="text-sm text-gray-700 mt-1">
             {STEPS[factIndex].fact}
           </p>
         </div>
       )}
 
       {/* Stepper */}
-      <div className="space-y-4">
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
         {STEPS.map((step, index) => {
           const isComplete = index < currentStepIndex;
           const isCurrent = index === currentStepIndex;
-          const isPending = index > currentStepIndex;
 
           return (
             <div key={step.key} className="flex items-center gap-4">
@@ -95,7 +93,7 @@ export function ProvisioningProgress() {
                   isComplete
                     ? "bg-green-100"
                     : isCurrent
-                    ? "bg-violet-100 ring-2 ring-violet-400 ring-offset-2"
+                    ? "bg-red-50 ring-2 ring-[#e60012] ring-offset-2"
                     : "bg-gray-100"
                 }`}
               >
@@ -103,19 +101,19 @@ export function ProvisioningProgress() {
               </div>
               <div className="flex-1">
                 <p
-                  className={`text-sm font-medium ${
+                  className={`text-sm font-bold ${
                     isComplete
                       ? "text-green-700"
                       : isCurrent
-                      ? "text-violet-700"
+                      ? "text-[#2d2d2d]"
                       : "text-gray-400"
                   }`}
                 >
                   {step.label}
                 </p>
                 {isCurrent && status === "provisioning" && step.key !== "ready" && (
-                  <div className="mt-1 h-1.5 bg-violet-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-violet-500 rounded-full animate-pulse w-2/3" />
+                  <div className="mt-1 h-1.5 bg-red-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#e60012] rounded-full animate-pulse w-2/3" />
                   </div>
                 )}
               </div>
@@ -128,7 +126,7 @@ export function ProvisioningProgress() {
       {status === "ready" && (
         <div className="mt-8 text-center">
           <div className="text-5xl mb-4">🎉</div>
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-extrabold text-[#2d2d2d]">
             KidsClaw is ready!
           </h2>
           <p className="text-gray-600 mt-2">
@@ -137,7 +135,7 @@ export function ProvisioningProgress() {
           </p>
           <a
             href="/dashboard"
-            className="inline-block mt-4 px-6 py-2.5 rounded-xl bg-violet-600 text-white font-medium hover:bg-violet-700"
+            className="inline-block mt-4 px-6 py-2.5 rounded-full bg-[#e60012] text-white font-bold hover:bg-[#c7000f]"
           >
             Go to Dashboard
           </a>
@@ -147,7 +145,7 @@ export function ProvisioningProgress() {
       {status === "error" && (
         <div className="mt-8 text-center">
           <div className="text-5xl mb-4">😟</div>
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-extrabold text-[#2d2d2d]">
             Something went wrong
           </h2>
           <p className="text-red-600 text-sm mt-2">
@@ -155,7 +153,7 @@ export function ProvisioningProgress() {
           </p>
           <a
             href="/dashboard"
-            className="inline-block mt-4 px-6 py-2.5 rounded-xl bg-red-600 text-white font-medium hover:bg-red-700"
+            className="inline-block mt-4 px-6 py-2.5 rounded-full bg-[#e60012] text-white font-bold hover:bg-[#c7000f]"
           >
             Back to Dashboard
           </a>
