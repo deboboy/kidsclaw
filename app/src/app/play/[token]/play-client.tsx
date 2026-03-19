@@ -25,19 +25,12 @@ export function PlayClient({ kidName, kidToken, subdomain, games }: PlayClientPr
   if (selectedGame) {
     return (
       <div className="h-dvh bg-gradient-to-b from-indigo-900 via-purple-900 to-violet-900 flex flex-col overflow-hidden">
-        {/* Back button */}
-        <button
-          onClick={() => setSelectedGame(null)}
-          className="absolute top-4 left-4 z-10 text-white/60 hover:text-white text-sm flex items-center gap-1"
-        >
-          ← Games
-        </button>
-
         <WebChat
           kidName={kidName}
           kidToken={kidToken}
           gameName={selectedGame.name}
           gameIcon={selectedGame.icon}
+          onBack={() => setSelectedGame(null)}
         />
       </div>
     );

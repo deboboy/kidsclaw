@@ -14,6 +14,7 @@ interface WebChatProps {
   kidToken: string;
   gameName: string;
   gameIcon: string;
+  onBack?: () => void;
 }
 
 export function WebChat({
@@ -21,6 +22,7 @@ export function WebChat({
   kidToken,
   gameName,
   gameIcon,
+  onBack,
 }: WebChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -101,9 +103,17 @@ export function WebChat({
   return (
     <div className="flex flex-col h-full w-full max-w-full overflow-hidden">
       {/* Chat header */}
-      <div className="bg-white/10 backdrop-blur-sm px-4 py-3 flex items-center gap-3 flex-shrink-0">
-        <div className="text-2xl">{gameIcon}</div>
-        <div className="min-w-0">
+      <div className="bg-white/10 backdrop-blur-sm px-4 py-3 flex items-center gap-3 flex-shrink-0 pt-[max(0.75rem,env(safe-area-inset-top))]">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="text-white/70 hover:text-white text-sm font-medium flex-shrink-0 pr-1"
+          >
+            ← Games
+          </button>
+        )}
+        <div className="text-2xl flex-shrink-0">{gameIcon}</div>
+        <div className="min-w-0 flex-1">
           <p className="text-white font-bold text-sm truncate">{gameName}</p>
           <p className="text-white/60 text-xs truncate">Playing as {kidName}</p>
         </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { buildPlayUrl } from "@/lib/tokens";
 
 interface Kid {
@@ -84,6 +86,7 @@ function KidCard({
 }) {
   const playUrl = buildPlayUrl(kid.token);
   const [copied, setCopied] = useState(false);
+  const [showQR, setShowQR] = useState(false);
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(playUrl);
@@ -113,34 +116,59 @@ function KidCard({
       </div>
 
       {kid.active && (
-        <div className="mt-3 flex flex-wrap gap-2">
-          <button
-            onClick={copyLink}
-            className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-50"
-          >
-            {copied ? "Copied!" : "Copy Link"}
-          </button>
-          {kid.phone && (
+        <>
+          <div className="mt-3 flex flex-wrap gap-2">
             <button
-              onClick={() => onSendLink(kid.id)}
+              onClick={() => setShowQR(!showQR)}
+              className="px-3 py-1.5 rounded-lg border border-violet-200 text-xs font-medium text-violet-700 hover:bg-violet-50"
+            >
+              {showQR ? "Hide QR" : "Show QR"}
+            </button>
+            <button
+              onClick={copyLink}
               className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-50"
             >
-              Send SMS
+              {copied ? "Copied!" : "Copy Link"}
             </button>
+            {kid.phone && (
+              <button
+                onClick={() => onSendLink(kid.id)}
+                className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Send SMS
+              </button>
+            )}
+            <button
+              onClick={() => onRegenerateToken(kid.id)}
+              className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-50"
+            >
+              New Link
+            </button>
+            <button
+              onClick={() => onToggleActive(kid.id, false)}
+              className="px-3 py-1.5 rounded-lg border border-red-200 text-xs font-medium text-red-600 hover:bg-red-50"
+            >
+              Deactivate
+            </button>
+          </div>
+
+          {showQR && (
+            <div className="mt-4 flex flex-col items-center gap-3">
+              <div className="bg-white p-4 rounded-xl border-2 border-violet-100">
+                <QRCodeSVG
+                  value={playUrl}
+                  size={180}
+                  bgColor="#ffffff"
+                  fgColor="#5b21b6"
+                  level="M"
+                />
+              </div>
+              <p className="text-xs text-gray-500 text-center break-all max-w-xs">
+                {playUrl}
+              </p>
+            </div>
           )}
-          <button
-            onClick={() => onRegenerateToken(kid.id)}
-            className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-50"
-          >
-            New Link
-          </button>
-          <button
-            onClick={() => onToggleActive(kid.id, false)}
-            className="px-3 py-1.5 rounded-lg border border-red-200 text-xs font-medium text-red-600 hover:bg-red-50"
-          >
-            Deactivate
-          </button>
-        </div>
+        </>
       )}
 
       {!kid.active && (
@@ -156,6 +184,3 @@ function KidCard({
     </div>
   );
 }
-
-// Need useState for the copy functionality
-import { useState } from "react";
