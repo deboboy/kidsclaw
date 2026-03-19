@@ -120,13 +120,14 @@ Deployed to Vercel connected to GitHub repo `deboboy/kidsclaw`. Fixed several is
 3. **No Inngest yet** — provisioning runs as a single Hetzner API call + fire-and-forget cloud-init. Works for MVP but no timeout/retry orchestration
 
 ### What's next
-
+- [X] Nintendo-style branding polish, confetti animation on provisioning complete
+- [X] Fix logic in a game where it keeps asking the same question when a kid gives the wrong answer; instead it should be supportive and give the answer and move onto the next question, i.e. don't frustrate the kid
+- [X] Think about how parents delete an instance in the dashboard; otherwise instances will remain running that they may forget about and cost us infrastructure charges; parents may also want to pause use of their KidsClaw account and need to shutdown instances; although we could solve this with Stripe billing and charge parents if they leave an instance running after N hours
 - [ ] Connect chat to real OpenClaw instance on VPS (once cloud-init completes successfully)
 - [ ] Set up wildcard DNS `*.play.kidsclaw.club` for per-family subdomains
 - [ ] Set up Inngest for durable provisioning (retries, timeouts, cleanup on failure)
 - [ ] VPS health checks — detect and handle down/unreachable servers
 - [ ] Configure Twilio for SMS play links
-- [ ] Nintendo-style branding polish, confetti animation on provisioning complete
 - [ ] More game content — expand built-in responses for all 7 games
 - [ ] Set up Upstash Redis for API rate limiting
 - [ ] Server teardown — clean up Hetzner VPS when parent destroys instance

@@ -122,7 +122,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-extrabold text-[#2d2d2d]">12. Governing Law</h2>
             <p className="text-gray-700 leading-relaxed">
-              These Terms shall be governed by and construed in accordance with the laws of the State of California, without regard to its conflict of law provisions. Any disputes arising from these Terms or the Service shall be resolved exclusively in the courts located in San Francisco County, California.
+              These Terms shall be governed by and construed in accordance with the laws of the State of Washington, without regard to its conflict of law provisions. Any disputes arising from these Terms or the Service shall be resolved exclusively in the courts located in San Francisco County, California.
             </p>
           </section>
 
