@@ -94,6 +94,13 @@ function SignInForm() {
           <p className="mt-4 text-xs text-gray-500 text-center">
             No password needed. We&apos;ll email you a secure sign-in link.
           </p>
+          <p className="mt-3 text-xs text-gray-400 text-center">
+            By signing in, you agree to our{" "}
+            <a href="/terms" className="text-[#e60012] hover:underline">
+              Terms of Service
+            </a>
+            .
+          </p>
         </form>
       </div>
     </div>

@@ -264,6 +264,11 @@ export default function LandingPage() {
           <p className="text-center text-white/50 text-sm">
             Safe, fun, educational AI games for kids.
           </p>
+          <div className="flex justify-center gap-4 mt-3">
+            <Link href="/terms" className="text-white/40 text-xs hover:text-white/60">
+              Terms of Service
+            </Link>
+          </div>
           <p className="text-center text-white/40 text-xs mt-2">
             Copyright &copy; 2026 Last Myle LLC. All rights reserved.
           </p>
