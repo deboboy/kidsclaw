@@ -32,12 +32,12 @@ export function KidList({
   const inactiveKids = kids.filter((k) => !k.active);
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <div className="bg-white rounded-2xl border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Kids</h2>
+        <h2 className="text-lg font-extrabold text-[#2d2d2d]">Kids</h2>
         <button
           onClick={onAddKid}
-          className="px-4 py-2 rounded-lg bg-violet-600 text-white text-sm font-medium hover:bg-violet-700 transition-colors"
+          className="px-4 py-2 rounded-full bg-[#e60012] text-white text-sm font-bold hover:bg-[#c7000f] transition-colors"
         >
           + Add Kid
         </button>
@@ -120,7 +120,7 @@ function KidCard({
           <div className="mt-3 flex flex-wrap gap-2">
             <button
               onClick={() => setShowQR(!showQR)}
-              className="px-3 py-1.5 rounded-lg border border-violet-200 text-xs font-medium text-violet-700 hover:bg-violet-50"
+              className="px-3 py-1.5 rounded-lg border border-red-200 text-xs font-bold text-[#e60012] hover:bg-red-50"
             >
               {showQR ? "Hide QR" : "Show QR"}
             </button>
@@ -154,12 +154,12 @@ function KidCard({
 
           {showQR && (
             <div className="mt-4 flex flex-col items-center gap-3">
-              <div className="bg-white p-4 rounded-xl border-2 border-violet-100">
+              <div className="bg-white p-4 rounded-xl border-2 border-red-100">
                 <QRCodeSVG
                   value={playUrl}
                   size={180}
                   bgColor="#ffffff"
-                  fgColor="#5b21b6"
+                  fgColor="#e60012"
                   level="M"
                 />
               </div>

@@ -24,7 +24,7 @@ export function PlayClient({ kidName, kidToken, subdomain, games }: PlayClientPr
 
   if (selectedGame) {
     return (
-      <div className="h-dvh bg-gradient-to-b from-indigo-900 via-purple-900 to-violet-900 flex flex-col overflow-hidden">
+      <div className="h-dvh bg-gradient-to-b from-[#1a0a2e] via-[#2d1b4e] to-[#1a0a2e] flex flex-col overflow-hidden">
         <WebChat
           kidName={kidName}
           kidToken={kidToken}
@@ -37,7 +37,7 @@ export function PlayClient({ kidName, kidToken, subdomain, games }: PlayClientPr
   }
 
   return (
-    <div className="min-h-dvh bg-gradient-to-b from-indigo-900 via-purple-900 to-violet-900 flex flex-col items-center justify-center px-4 py-8">
+    <div className="min-h-dvh bg-gradient-to-b from-[#1a0a2e] via-[#2d1b4e] to-[#1a0a2e] flex flex-col items-center justify-center px-4 py-8">
       {/* Welcome */}
       <div className="text-center mb-8">
         <div className="text-6xl mb-4">🎮</div>

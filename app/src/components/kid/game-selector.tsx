@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 interface Game {
   id: string;
   name: string;
@@ -16,33 +14,27 @@ interface GameSelectorProps {
 }
 
 export function GameSelector({ games, onSelect }: GameSelectorProps) {
-  const [selected, setSelected] = useState(0);
-
   return (
-    <div className="w-full">
-      <h2 className="text-2xl font-bold text-white text-center mb-6 drop-shadow-lg">
-        Pick a Game!
+    <div className="w-full max-w-lg mx-auto px-4">
+      <h2 className="text-2xl font-extrabold text-white text-center mb-6">
+        Choose Your Game
       </h2>
 
-      {/* Carousel */}
-      <div className="flex gap-4 overflow-x-auto pb-4 px-4 snap-x snap-mandatory scrollbar-hide">
-        {games.map((game, index) => (
+      <div className="grid grid-cols-2 gap-3">
+        {games.map((game) => (
           <button
             key={game.id}
-            onClick={() => {
-              setSelected(index);
-              onSelect(game);
-            }}
-            className={`flex-shrink-0 w-36 snap-center rounded-2xl p-5 text-center transition-all transform ${
-              selected === index
-                ? "bg-white/20 backdrop-blur-sm scale-105 ring-2 ring-white/50"
-                : "bg-white/10 backdrop-blur-sm hover:bg-white/15"
-            }`}
+            onClick={() => onSelect(game)}
+            className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center transition-all hover:bg-white/20 hover:scale-[1.03] active:scale-[0.98] border border-white/10 hover:border-white/30"
           >
-            <div className="text-5xl mb-3">{game.icon}</div>
-            <div className="text-white font-bold text-sm">{game.name}</div>
-            <div className="text-white/60 text-xs mt-1">{game.topic}</div>
-            <div className="text-white/40 text-xs mt-1">Day {game.day}</div>
+            <div className="text-4xl mb-2">{game.icon}</div>
+            <div className="text-white font-extrabold text-sm leading-tight">
+              {game.name}
+            </div>
+            <div className="text-white/50 text-xs mt-1">{game.topic}</div>
+            <div className="mt-2 inline-block bg-white/10 rounded-full px-2.5 py-0.5 text-[10px] font-bold text-white/60">
+              Day {game.day}
+            </div>
           </button>
         ))}
       </div>

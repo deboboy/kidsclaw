@@ -14,22 +14,22 @@ function SignInForm() {
 
   if (isVerify || sent) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-violet-50 to-white px-4">
+      <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5] px-4">
         <div className="w-full max-w-md text-center">
           <div className="text-5xl mb-6">📬</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-extrabold text-[#2d2d2d] mb-2">
             Check your email
           </h1>
           <p className="text-gray-600">
             We sent a magic link to{" "}
-            <span className="font-medium text-gray-900">{email || "your email"}</span>.
+            <span className="font-bold text-[#2d2d2d]">{email || "your email"}</span>.
             Click it to sign in.
           </p>
           <p className="mt-4 text-sm text-gray-500">
             Didn&apos;t get it? Check your spam folder or{" "}
             <button
               onClick={() => setSent(false)}
-              className="text-violet-600 hover:underline"
+              className="text-[#e60012] font-bold hover:underline"
             >
               try again
             </button>
@@ -49,24 +49,29 @@ function SignInForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-violet-50 to-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5] px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-violet-600 mb-2">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-10 h-10 bg-[#e60012] rounded-xl flex items-center justify-center text-white font-extrabold text-lg">
+              KC
+            </div>
+          </div>
+          <h1 className="text-2xl font-extrabold text-[#2d2d2d]">
             KidsClaw
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 mt-1">
             Sign in or create your account
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8"
+          className="bg-white rounded-2xl border border-gray-200 p-8"
         >
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-bold text-[#2d2d2d] mb-2"
           >
             Email address
           </label>
@@ -77,12 +82,12 @@ function SignInForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="parent@example.com"
-            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#e60012] focus:border-transparent text-[#2d2d2d]"
           />
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full py-3 rounded-lg bg-violet-600 text-white font-semibold hover:bg-violet-700 disabled:opacity-50 transition-colors"
+            className="mt-4 w-full py-3 rounded-full bg-[#e60012] text-white font-bold hover:bg-[#c7000f] disabled:opacity-50 transition-colors"
           >
             {loading ? "Sending..." : "Send Magic Link"}
           </button>
