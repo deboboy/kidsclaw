@@ -11,6 +11,7 @@ interface InstanceCardProps {
   } | null;
   onLaunch: () => void;
   onRetry: () => void;
+  onDestroy: () => void;
   launching: boolean;
 }
 
@@ -28,6 +29,7 @@ export function InstanceCard({
   instance,
   onLaunch,
   onRetry,
+  onDestroy,
   launching,
 }: InstanceCardProps) {
   if (!instance) {
@@ -70,10 +72,16 @@ export function InstanceCard({
       </div>
 
       {instance.status === "ready" && (
-        <div className="space-y-2 text-sm text-gray-600">
+        <div className="space-y-3 text-sm text-gray-600">
           <p>
             Your KidsClaw server is running and ready for your kids to play!
           </p>
+          <button
+            onClick={onDestroy}
+            className="px-4 py-1.5 rounded-full border border-gray-300 text-xs font-bold text-gray-500 hover:border-red-300 hover:text-[#e60012] hover:bg-red-50 transition-colors"
+          >
+            Shut down server
+          </button>
         </div>
       )}
 

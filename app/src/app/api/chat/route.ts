@@ -102,57 +102,64 @@ function getGameIntro(game: string, name: string): string {
 }
 
 function getMarsResponse(msg: string, name: string): string {
-  // Check for number answers (Mars math problems)
   const num = parseFloat(msg.replace(/[^0-9.]/g, ""));
 
-  if (num >= 290 && num <= 292) {
-    return `🎉 Great job, ${name}! That's right — about 291.67 days!\n\n140,000,000 ÷ 20,000 = 7,000 hours\n7,000 ÷ 24 = ~291.67 days\n\nThat's almost 10 months! Now here's the next challenge:\n\nA rocket needs about 8,800 pounds of fuel PER MILE. If the trip is 140 million miles, how many pounds of fuel in total? (Hint: try scientific notation! 🔢)`;
+  if (num >= 290 && num <= 293) {
+    return `🎉 Amazing, ${name}! That's exactly right — about 291.67 days!\n\n140,000,000 ÷ 20,000 = 7,000 hours\n7,000 ÷ 24 = ~291.67 days\n\nThat's almost 10 months in space! 🚀\n\nHere's your next challenge: You need to bring water for 4 astronauts for 30 days. Each astronaut needs 3 gallons per day. How many TOTAL gallons do you need?`;
   }
-  if (num >= 7000 && num <= 7001) {
-    return `You found the hours — 7,000! Now divide by 24 to get the days. How many days is that? 🤔`;
+  if (num === 360) {
+    return `🎉 Yes! 360 gallons! Great work, ${name}!\n\n4 astronauts × 3 gallons × 30 days = 360 gallons\n\nThat's a LOT of water! 💧\n\nLast one: How many times bigger is the distance to Mars (140 million miles) than the distance to the Moon (238,000 miles)? Round to the nearest whole number!`;
   }
-  if (num > 0) {
-    return `Hmm, not quite ${name}! Remember:\n\n1️⃣ Total hours = 140,000,000 miles ÷ 20,000 mph\n2️⃣ Total days = Total hours ÷ 24\n\nGive it another try! You got this! 💪`;
+  if (num >= 587 && num <= 589) {
+    return `🎉 Incredible, ${name}! About 588 times farther! 🌕➡️🔴\n\n140,000,000 ÷ 238,000 ≈ 588\n\nMars is almost 600 times farther than the Moon! You crushed this mission! 🏆\n\nType "next" to try another game, or keep chatting!`;
   }
 
-  return `Great thinking, ${name}! 🚀\n\nFor this Mars mission problem, try working through the math step by step:\n\n1️⃣ Distance: 140,000,000 miles\n2️⃣ Speed: 20,000 mph\n3️⃣ Time = Distance ÷ Speed\n\nWhat do you get for the number of hours first?`;
+  // Supportive response — give the answer and move on
+  return `Great effort, ${name}! 💪 That's a tough one!\n\nThe answer is about 291.67 days. Here's how:\n• 140,000,000 miles ÷ 20,000 mph = 7,000 hours\n• 7,000 hours ÷ 24 = ~291.67 days\n\nThat's almost 10 months! 🚀\n\nLet's try the next one: You need water for 4 astronauts for 30 days. Each needs 3 gallons per day. How many TOTAL gallons?`;
 }
 
 function getScienceResponse(msg: string, name: string): string {
-  if (msg.includes("swirl") || msg.includes("mix") || msg.includes("move") || msg.includes("spread")) {
-    return `Great observation, ${name}! 🔬\n\nThe colors swirl because the soap breaks the surface tension of the milk and reacts with the fat! It's like a mini fireworks show!\n\nNow for a science term challenge: What's the process called where plants make their own food using sunlight, water, and carbon dioxide? 🌱`;
+  if (msg.includes("swirl") || msg.includes("mix") || msg.includes("move") || msg.includes("spread") || msg.includes("color")) {
+    return `Great observation, ${name}! 🔬\n\nYes! The colors swirl and dance! The soap breaks the surface tension of the milk and reacts with the fat molecules — like a mini fireworks show! 🎆\n\nNext challenge: What's the process called where plants make their own food using sunlight, water, and carbon dioxide? 🌱`;
   }
   if (msg.includes("photo") || msg.includes("synthesis")) {
-    return `Yes! Photosynthesis! 🌿 Amazing, ${name}!\n\nPlants are like tiny food factories powered by sunlight!\n\nOne more: If you dissolve salt in water, and keep adding more and more salt until no more dissolves... what is that point called? (Hint: it starts with 'S') 🧪`;
+    return `Yes! Photosynthesis! 🌿 Amazing, ${name}!\n\nPlants are like tiny food factories powered by sunlight!\n\nLast one: When you dissolve salt in water and keep adding more until no more dissolves, what's that point called? (Hint: starts with 'S') 🧪`;
   }
   if (msg.includes("satur")) {
-    return `🎉 Correct! The saturation point! Great science vocabulary, ${name}!\n\nWhen a solution can't dissolve any more solute, we call it a SATURATED solution. You're a natural scientist! 🧑‍🔬`;
+    return `🎉 Correct! The saturation point! ${name}, you're a natural scientist! 🧑‍🔬\n\nWhen no more solute can dissolve, we call it a SATURATED solution.\n\nType "next" to try another game, or keep exploring!`;
   }
 
-  return `Interesting answer, ${name}! 🤔\n\nTell me more about what you think will happen! Think about what the soap might do to the milk. Will the colors stay still, or will something happen? 🎨`;
+  // Supportive — give context and move to the next question
+  return `Good thinking, ${name}! 🤔 When the soapy swab touches the milk, the colors actually SWIRL and DANCE around! The soap breaks the surface tension and reacts with the fat in the milk.\n\nCool, right? 🎨\n\nHere's the next one: What's the process where plants make food from sunlight, water, and CO2? 🌱`;
 }
 
 function getTriviaResponse(msg: string, name: string): string {
-  if (msg.includes("b") || msg.includes("mars")) {
-    return `Correct! It's Mars! 🔴✨ Great job, ${name}!\n\nNext question: What is the LARGEST planet in our solar system?\n\nA) Earth\nB) Uranus\nC) Jupiter\nD) Neptune`;
+  const m = msg.toLowerCase();
+
+  if (m.includes("b") && !m.includes("a)") || m.includes("mars")) {
+    return `Correct! It's Mars! 🔴✨ Great job, ${name}!\n\nQuestion 2: What is the LARGEST planet in our solar system?\n\nA) Earth\nB) Uranus\nC) Jupiter\nD) Neptune`;
   }
-  if (msg.includes("c") || msg.includes("jupiter")) {
-    return `Jupiter is right! 🪐 It's MASSIVE — you could fit 1,300 Earths inside it!\n\nQuestion 3: What force keeps the planets in orbit around the Sun?\n\nA) Magnetism\nB) Gravity\nC) Wind\nD) Electricity`;
+  if (m.includes("c") && !m.includes("a)") || m.includes("jupiter")) {
+    return `Jupiter is right! 🪐 It's so big you could fit 1,300 Earths inside it!\n\nQuestion 3: What force keeps the planets in orbit around the Sun?\n\nA) Magnetism\nB) Gravity\nC) Wind\nD) Electricity`;
   }
-  if (msg.includes("gravity")) {
-    return `Exactly — Gravity! 🌕 Sir Isaac Newton figured that out when an apple fell on his head (well, maybe not exactly like that!)\n\nFinal question: What celestial body made of dust, ice, and rock orbits the Sun with a glowing tail?\n\nA) Asteroid\nB) Comet\nC) Meteor\nD) Nebula`;
+  if (m.includes("gravity") || (m.includes("b") && m.includes("grav"))) {
+    return `Exactly — Gravity! 🌕 It's the invisible force that holds the whole solar system together!\n\nFinal question: What's a celestial body made of dust, ice, and rock that orbits the Sun with a glowing tail?\n\nA) Asteroid\nB) Comet\nC) Meteor\nD) Nebula`;
+  }
+  if (m.includes("comet") || (m === "b" && msg.length < 5)) {
+    return `🎉 Yes, a Comet! ${name}, you're a space trivia champion! 🏆\n\nComets have tails made of gas and dust that glow when they get close to the Sun. How cool is that?\n\nType "next" to try another game!`;
   }
 
-  return `Give it your best guess, ${name}! 🌟\n\nRemember, there are no wrong answers in space — only opportunities to learn something new! Which letter do you pick? (A, B, C, or D)`;
+  // Supportive — give the answer and move on
+  return `Nice try, ${name}! 🌟 The answer is B) Mars — it's called the Red Planet because of the iron oxide (rust!) on its surface.\n\nLet's keep going! Question 2: What is the LARGEST planet in our solar system?\n\nA) Earth\nB) Uranus\nC) Jupiter\nD) Neptune`;
 }
 
 function getGenericResponse(msg: string, name: string, game: string): string {
   const responses = [
-    `That's a really creative answer, ${name}! 🌟 Tell me more about your thinking!`,
-    `Wow, ${name}! I love how you're approaching this! 🚀 What made you think of that?`,
-    `Great thinking, ${name}! 💡 Can you explain a bit more? I want to hear your ideas!`,
-    `Interesting, ${name}! 🤔 You're really good at ${game}! What would you try next?`,
-    `Nice one, ${name}! ⭐ Keep going — you're on the right track!`,
+    `That's really creative, ${name}! 🌟 I love your thinking! Here's another challenge: What would you do differently if you could try again?`,
+    `Wow, ${name}! 🚀 Great answer! Now tell me — what's the most surprising thing you've learned so far in ${game}?`,
+    `Nice one, ${name}! 💡 You're really getting the hang of this! What would you like to explore next?`,
+    `Awesome thinking, ${name}! ⭐ I can tell you're great at ${game}. What question do YOU have for me?`,
+    `Love it, ${name}! 🎯 You're doing amazing. Want to try a harder challenge or keep going at this level?`,
   ];
   return responses[Math.floor(Math.random() * responses.length)];
 }

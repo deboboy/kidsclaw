@@ -77,6 +77,16 @@ export default function DashboardPage() {
     }
   };
 
+  const handleDestroy = async () => {
+    if (!confirm("Are you sure? This will shut down your game server and kids will lose access until you launch again.")) {
+      return;
+    }
+    await fetch("/api/instances", { method: "DELETE" });
+    setInstance(null);
+    setKids([]);
+    fetchData();
+  };
+
   const handleAddKid = async (name: string, phone: string) => {
     const res = await fetch("/api/kids", {
       method: "POST",
@@ -152,6 +162,7 @@ export default function DashboardPage() {
           instance={instance}
           onLaunch={handleLaunch}
           onRetry={handleRetry}
+          onDestroy={handleDestroy}
           launching={launching}
         />
 
