@@ -120,6 +120,8 @@ Deployed to Vercel connected to GitHub repo `deboboy/kidsclaw`. Fixed several is
 3. **No Inngest yet** — provisioning runs as a single Hetzner API call + fire-and-forget cloud-init. Works for MVP but no timeout/retry orchestration
 
 ### What's next
+- [ ] Add a feedback form or some way for parents and kids to give us feedback; that's how we'll improve the product experience!
+- [ ] Add Posthog analytics
 - [X] Nintendo-style branding polish, confetti animation on provisioning complete
 - [X] Fix logic in a game where it keeps asking the same question when a kid gives the wrong answer; instead it should be supportive and give the answer and move onto the next question, i.e. don't frustrate the kid
 - [X] Think about how parents delete an instance in the dashboard; otherwise instances will remain running that they may forget about and cost us infrastructure charges; parents may also want to pause use of their KidsClaw account and need to shutdown instances; although we could solve this with Stripe billing and charge parents if they leave an instance running after N hours
@@ -128,6 +130,17 @@ Deployed to Vercel connected to GitHub repo `deboboy/kidsclaw`. Fixed several is
 - [ ] Set up Inngest for durable provisioning (retries, timeouts, cleanup on failure)
 - [ ] VPS health checks — detect and handle down/unreachable servers
 - [ ] Configure Twilio for SMS play links
+---
+
+## Session 3 — 2026-03-20
+
+### What was done
+- Installed `@vercel/analytics` package
+- Added `<Analytics />` component to root layout (`app/src/app/layout.tsx`)
+- Ran successful production build — all 24 routes compiled without errors
+
+---
+
 - [ ] More game content — expand built-in responses for all 7 games
 - [ ] Set up Upstash Redis for API rate limiting
 - [ ] Server teardown — clean up Hetzner VPS when parent destroys instance
